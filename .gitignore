@@ -1,0 +1,13 @@
+# Compiled binaries
+/bin/
+
+# macOS
+.DS_Store
+
+# Environment variables
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
