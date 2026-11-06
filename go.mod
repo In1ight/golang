@@ -1,4 +1,4 @@
-module example.com/analytics
+module github.com/In1ight/golang
 
 go 1.27.1
 

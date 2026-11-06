@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"sync/atomic"
+	"log/slog"
 	"testing"
 )
 
@@ -11,7 +12,7 @@ func TestReadyHandler(t *testing.T) {
 	var ready atomic.Bool
 	ready.Store(true)
 
-	handler := ReadyHandler(&ready)
+	handler := http.HandlerFunc(NewHandler(slog.Default(), &ready).ReadyHandler)
 
 	req := httptest.NewRequest(http.MethodGet, "/readyz", nil)
 	rec := httptest.NewRecorder()

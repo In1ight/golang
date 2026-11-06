@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"errors"
-	"example.com/analytics/internal/controlplane"
 	"fmt"
+	"github.com/In1ight/golang/internal/controlplane"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"log/slog"
@@ -20,9 +20,8 @@ func run() error {
 	ready.Store(true)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/healthz", controlplane.HealthHandler)
-	mux.HandleFunc("/readyz", controlplane.ReadyHandler(&ready))
-	mux.Handle("/metrics", promhttp.Handler())
+
+	mux.Handle("GET /metrics", promhttp.Handler())
 
 	cfg, err := controlplane.LoadConfig()
 	if err != nil {
@@ -41,6 +40,9 @@ func run() error {
 			Level: level,
 		}),
 	)
+	handler := controlplane.NewHandler(logger, &ready)
+	mux.HandleFunc("GET /healthz", handler.HealthHandler)
+	mux.HandleFunc("GET /readyz", handler.ReadyHandler)
 
 	ctx, stop := signal.NotifyContext(
 		context.Background(),
