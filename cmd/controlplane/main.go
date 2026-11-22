@@ -40,9 +40,15 @@ func run() error {
 			Level: level,
 		}),
 	)
-	handler := controlplane.NewHandler(logger, &ready)
+	store := controlplane.NewProjectStore()
+	handler := controlplane.NewHandler(logger, &ready, store)
 	mux.HandleFunc("GET /healthz", handler.HealthHandler)
 	mux.HandleFunc("GET /readyz", handler.ReadyHandler)
+	mux.HandleFunc("POST /v1/projects", handler.CreateProject)
+	mux.HandleFunc("GET /v1/projects", handler.ListProjects)
+	mux.HandleFunc("GET /v1/projects/{id}", handler.GetProject)
+	mux.HandleFunc("PATCH /v1/projects/{id}", handler.PatchProject)
+	mux.HandleFunc("DELETE /v1/projects/{id}", handler.DeleteProject)
 
 	ctx, stop := signal.NotifyContext(
 		context.Background(),

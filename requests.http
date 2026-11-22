@@ -1,0 +1,103 @@
+@baseUrl = http://127.0.0.1:8080
+@id = b0db56a5-8165-4650-bd85-2bdfc0ead8b8
+
+### Create project
+POST {{baseUrl}}/v1/projects
+Content-Type: application/json
+
+{
+    "name": "Google",
+    "timezone": "Europe/Moscow"
+}
+
+
+
+### Get project
+GET {{baseUrl}}/v1/projects/{{id}}
+
+
+### List projects
+GET {{baseUrl}}/v1/projects
+
+
+### 1. Update project
+PATCH {{baseUrl}}/v1/projects/{{id}}
+Content-Type: application/json
+
+{
+    "name": "Microsoft"
+}
+
+
+### 2. Get updated project - 200
+GET {{baseUrl}}/v1/projects/{{id}}
+
+### 3. Change timezone - 200
+PATCH {{baseUrl}}/v1/projects/{{id}}
+Content-Type: application/json
+
+{
+    "timezone": "Asia/Almaty"
+}
+
+
+### 4. Invalid JSON - 400
+POST {{baseUrl}}/v1/projects
+Content-Type: application/json
+
+{"name":}
+
+
+### 5. Empty name - 422
+POST {{baseUrl}}/v1/projects
+Content-Type: application/json
+
+{
+    "name": ""
+}
+
+### 6. Invalid timezone - 422
+POST {{baseUrl}}/v1/projects
+Content-Type: application/json
+
+{
+    "name": "Test",
+    "timezone": "Invalid/Zone"
+}
+
+
+### 7. Invalid PATCH name - 422
+PATCH {{baseUrl}}/v1/projects/{{id}}
+Content-Type: application/json
+
+{
+    "name": ""
+}
+
+
+### 8. Invalid PATCH timezone - 422
+PATCH {{baseUrl}}/v1/projects/{{id}}
+Content-Type: application/json
+
+{
+    "timezone": "Invalid/Zone"
+}
+
+### 9. Unknown project - 404
+GET {{baseUrl}}/v1/projects/nonexistent-id
+
+
+### 10. Delete unknown project - 404
+DELETE {{baseUrl}}/v1/projects/nonexistent-id
+
+
+### 11. Delete existing project - 204
+DELETE {{baseUrl}}/v1/projects/{{id}}
+
+
+### 12. Delete again - 404
+DELETE {{baseUrl}}/v1/projects/{{id}}
+
+
+### 13. Get deleted project - 404
+GET {{baseUrl}}/v1/projects/{{id}}

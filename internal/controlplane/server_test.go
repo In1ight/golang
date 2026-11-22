@@ -1,10 +1,10 @@
 package controlplane
 
 import (
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"sync/atomic"
-	"log/slog"
 	"testing"
 )
 
@@ -12,7 +12,7 @@ func TestReadyHandler(t *testing.T) {
 	var ready atomic.Bool
 	ready.Store(true)
 
-	handler := http.HandlerFunc(NewHandler(slog.Default(), &ready).ReadyHandler)
+	handler := http.HandlerFunc(NewHandler(slog.Default(), &ready, NewProjectStore()).ReadyHandler)
 
 	req := httptest.NewRequest(http.MethodGet, "/readyz", nil)
 	rec := httptest.NewRecorder()
